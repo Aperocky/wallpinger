@@ -42,7 +42,7 @@
     <section id='websites'>
       <div class="container" style="padding-top:50px;">
         <div class="row">
-          <div class="col-lg-11 mx-auto">
+          <div class="col-lg-12 mx-auto">
             <div class="row">
           {% if website_list %}
             {% for each in website_list %}
@@ -63,6 +63,11 @@
                 <div class="overlays">
                   {% csrf_token %}
                   <a href="{% url 'connector:ping' each.id %}" class="ajaxcall"><btn class="btn pingme text-white lead"> Ping Me </btn></a>
+                </div>
+                <div class="loadingframe">
+                  <div class="loading text-white">
+                    Pinging
+                  </div>
                 </div>
               </div>
             </div>

@@ -2,6 +2,7 @@
 $('.ajaxcall').click(function(event) {
     event.preventDefault();
     console.log("executing ajax call");
+    $(this).parent().parent().find("div.loadingframe").show();
     $.ajax({
         url: $(this).attr('href'),
         context: this,
@@ -15,7 +16,8 @@ $('.ajaxcall').click(function(event) {
           } else {
             $(this).parent().parent().find("p.results").html("Pinged at " + datestr + '<br /> 0/5 Packets Received <br /> Average RTT: N/A');
           }
-          console.log($(this).parent().parent().find("p.results"));
+          $(this).parent().parent().find("div.loadingframe").hide();
+          console.log($(this).parent().parent().find("div.loadingframe"))
           console.log(datestr);
         }
     });
