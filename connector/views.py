@@ -83,10 +83,13 @@ def add_website(request):
     'website_name': my_website.website_name,
     'website_url': my_website.website_url,
     'received' : returns,
+    'sent': sent,
     'average' : avg,
     'sent_time' : curr_time,
     'color' : color
     }
+    if sent == 0:
+        my_website.delete()
     return JsonResponse(response)
 
 def pingwebsite(website):

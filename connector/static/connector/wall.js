@@ -48,6 +48,10 @@ $("#addform").submit(function(e){
       console.log("I have received a response from add website");
       console.log(status);
       $('#addloading').hide();
+      if (response['sent'] == 0){
+        alert("URL can't be resolved.");
+        return false;
+      }
       var lastpass = $(".website:last");
       newpass = lastpass.clone();
       newpass.find(".passage").removeClass("bg-red bg-lime bg-yellow");
@@ -62,6 +66,7 @@ $("#addform").submit(function(e){
         newpass.find("p.results").html("Pinged at " + datestr + '<br /> 0/5 Packets Received <br /> Average RTT: N/A');
       }
       newpass.insertAfter(lastpass);
+      return false;
     }
   });
 });
