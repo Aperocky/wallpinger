@@ -6,5 +6,6 @@ app_name = 'connector'
 urlpatterns = [
     path('', views.index, name='index'),
     path('<int:website_id>/ping', views.ping, name='ping'),
-    path('<int:website_id>/history', views.history, name='history')
+    path('<int:website_id>/history', views.history, name='history'),
+    path('add', views.add_website, name='add_website'),
 ]

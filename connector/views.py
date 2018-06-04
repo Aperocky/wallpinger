@@ -25,6 +25,8 @@ def index(request):
             each.result.color = "bg-yellow"
         else:
             each.result.color = "bg-red"
+        # if each.result.ping_total == 0:
+        #     each.result.failure = True
     context = {
     'website_list': website_list
     }
@@ -33,16 +35,23 @@ def index(request):
 def ping(request, website_id):
     my_website = Website.objects.get(pk=website_id)
     sent, returns, avg, curr_time = pingwebsite(my_website)
-    resdata = {
+    if returns == 5:
+        color = "bg-lime"
+    elif returns > 0:
+        color = "bg-yellow"
+    else:
+        color = "bg-red"
+    response = {
     'received' : returns,
     'average' : avg,
-    'sent_time' : curr_time
+    'sent_time' : curr_time,
+    'color' : color
     }
-    return JsonResponse(resdata)
+    return JsonResponse(response)
 
 def history(request, website_id):
     my_website = Website.objects.get(pk=website_id)
-    records = my_website.result_set.all()
+    records = my_website.result_set.all().order_by('-ping_time')
     for each in records:
         each.ping_result = str(each.ping_result)
         each.ping_result += " ms"
@@ -58,6 +67,28 @@ def history(request, website_id):
     }
     return render(request, 'connector/history.html', context)
 
+def add_website(request):
+    website_name = request.POST['website_name']
+    website_url = request.POST['website_url']
+    my_website = Website(website_name=website_name, website_url=website_url)
+    my_website.save()
+    sent, returns, avg, curr_time = pingwebsite(my_website)
+    if returns == 5:
+        color = "bg-lime"
+    elif returns > 0:
+        color = "bg-yellow"
+    else:
+        color = "bg-red"
+    response = {
+    'website_name': my_website.website_name,
+    'website_url': my_website.website_url,
+    'received' : returns,
+    'average' : avg,
+    'sent_time' : curr_time,
+    'color' : color
+    }
+    return JsonResponse(response)
+
 def pingwebsite(website):
     url = website.website_url
     sent, returns, avg = pingfunction(url)
@@ -69,18 +100,25 @@ def pingfunction(url):
     result = subprocess.run(['ping', '-c 5', '-W 2', url], stdout=subprocess.PIPE)
     text = result.stdout.decode('ascii')
     texts = text.split('\n')[-4:]
+    print(texts)
     if '---' in texts[0]:
         stustr = texts[1]
         stastr = texts[2]
     else:
-        stustr = texts[2]
+        if len(texts) < 3:
+            stustr = "0 of, 0 of, haha"
+        else:
+            stustr = texts[2]
         stastr = False
     lstustr = stustr.split(',')
     sent = int(lstustr[0].strip(" ")[0])
     returns = int(lstustr[1].strip(" ")[0])
     if not stastr is False:
         lstastr = stastr.split('/')
-        avg = lstastr[-3]
+        if len(lstastr) > 3:
+            avg = lstastr[-3]
+        else:
+            avg = -1
     else:
         avg = -1
     return sent, returns, avg

@@ -49,11 +49,11 @@
   outline-color: white;
 }
 
-.overlays:hover{
+.overlays:hover, .overlays:active{
   display: block;
 }
 
-.passage:hover .overlays{
+.passage:hover .overlays, .passage:active .overlays{
   display: block;
 }
 
