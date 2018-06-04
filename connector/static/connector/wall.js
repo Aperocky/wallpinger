@@ -9,7 +9,8 @@ $('.ajaxcall').click(function(event) {
         success: function(response) {
           console.log('I have received a response');
           var date = new Date(response['sent_time']);
-          var datestr = date.toLocaleString();
+          var datestr = date.toUTCString();
+          datestr = datestr.substring(0, datestr.lastIndexOf(" "));
 
           if (response['received'] > 0){
             $(this).parent().parent().find("p.results").html("Pinged at " + datestr + '<br />' + response['received'] + "/5 Packets Received <br /> Average RTT: " + response['average'] + ' ms');
@@ -31,6 +32,7 @@ $('.ajaxcall').click(function(event) {
 $('#adding').click( function(){
   $('#addform').toggle();
   $('#adding').html($('#adding').html() == ' Add ' ? ' Hide ' : ' Add ');
+  return false;
 });
 
 // Ajax call handling adding of websites
