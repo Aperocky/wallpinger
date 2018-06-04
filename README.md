@@ -9,3 +9,5 @@ This is a simple django project which tracks website being blocked by the great 
 2. models.py: Improve model to differentiate between standard set and new set.
 
 3. tests: Establish unit tests.
+
+4. Support Mobile
