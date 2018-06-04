@@ -40,6 +40,24 @@ def ping(request, website_id):
     }
     return JsonResponse(resdata)
 
+def history(request, website_id):
+    my_website = Website.objects.get(pk=website_id)
+    records = my_website.result_set.all()
+    for each in records:
+        each.ping_result = str(each.ping_result)
+        each.ping_result += " ms"
+        if each.ping_success == 5:
+            each.color = "bg-lime"
+        elif each.ping_success > 0:
+            each.color = "bg-yellow"
+        else:
+            each.color = "bg-red"
+    context = {
+    'website' : my_website,
+    'records' : records
+    }
+    return render(request, 'connector/history.html', context)
+
 def pingwebsite(website):
     url = website.website_url
     sent, returns, avg = pingfunction(url)
@@ -66,6 +84,3 @@ def pingfunction(url):
     else:
         avg = -1
     return sent, returns, avg
-
-result = pingfunction('baidu.com')[-4:]
-result

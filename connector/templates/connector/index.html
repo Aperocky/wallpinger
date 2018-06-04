@@ -63,6 +63,7 @@
                 <div class="overlays">
                   {% csrf_token %}
                   <a href="{% url 'connector:ping' each.id %}" class="ajaxcall"><btn class="btn pingme text-white lead"> Ping Me </btn></a>
+                  <a href="{% url 'connector:history' each.id %}" class="historycall float-right"><btn class="btn pingme text-white lead"> History </btn></a>
                 </div>
                 <div class="loadingframe">
                   <div class="loading text-white">
@@ -79,4 +80,11 @@
       </div>
     </section>
     <script src="{% static 'connector/wall.js' %}"></script>
+
+    <footer class="py-5 bg-dark">
+      <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; Rocky Li</p>
+      </div>
+      <!-- /.container -->
+    </footer>
   </body>
