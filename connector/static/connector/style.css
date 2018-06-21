@@ -54,6 +54,7 @@
 }
 
 .passage:hover .overlays, .passage:active .overlays{
+  cursor: pointer;
   display: block;
 }
 

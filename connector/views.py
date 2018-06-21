@@ -6,7 +6,7 @@ import subprocess
 
 # Create your views here.
 def index(request):
-    website_list = Website.objects.all()
+    website_list = Website.objects.filter(website_submitter=True)
     for each in website_list:
         each.condensed_name = each.website_name.replace(" ", "")
         if len(each.result_set.all()) > 0:
@@ -70,7 +70,7 @@ def history(request, website_id):
 def add_website(request):
     website_name = request.POST['website_name']
     website_url = request.POST['website_url']
-    my_website = Website(website_name=website_name, website_url=website_url)
+    my_website = Website(website_name=website_name, website_url=website_url, website_submitter=False)
     my_website.save()
     sent, returns, avg, curr_time = pingwebsite(my_website)
     if returns == 5:
