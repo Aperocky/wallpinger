@@ -72,6 +72,7 @@ def add_website(request):
     website_url = request.POST['website_url']
     my_website = Website(website_name=website_name, website_url=website_url, website_submitter=False)
     my_website.save()
+    my_id = my_website.pk
     sent, returns, avg, curr_time = pingwebsite(my_website)
     if returns == 5:
         color = "bg-lime"
@@ -86,7 +87,8 @@ def add_website(request):
     'sent': sent,
     'average' : avg,
     'sent_time' : curr_time,
-    'color' : color
+    'color' : color,
+    'my_id' : my_id
     }
     if sent == 0:
         my_website.delete()
@@ -109,7 +111,7 @@ def pingfunction(url):
         stastr = texts[2]
     else:
         if len(texts) < 3:
-            stustr = "0 of, 0 of, haha"
+            stustr = "0 of 0, This probably is not a valid URL"
         else:
             stustr = texts[2]
         stastr = False

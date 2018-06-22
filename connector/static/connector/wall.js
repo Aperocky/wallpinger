@@ -1,32 +1,34 @@
-// Ajax call to ping websites.
-$('.ajaxcall').click(function(event) {
-    event.preventDefault();
-    console.log("executing ajax ping call");
-    $(this).parent().parent().find("div.loadingframe").show();
-    $.ajax({
-        url: $(this).attr('href'),
-        context: this,
-        success: function(response) {
-          console.log('I have received a response');
-          var date = new Date(response['sent_time']);
-          var datestr = date.toUTCString();
-          datestr = datestr.substring(0, datestr.lastIndexOf(" "));
+function AjaxPing(event) {
+  event.preventDefault();
+  console.log("executing ajax ping call");
+  $(this).parent().parent().find("div.loadingframe").show();
+  $.ajax({
+    url: $(this).attr('href'),
+    context: this,
+    success: function (response) {
+      console.log('I have received a response');
+      var date = new Date(response['sent_time']);
+      var datestr = date.toUTCString();
+      datestr = datestr.substring(0, datestr.lastIndexOf(" "));
 
-          if (response['received'] > 0){
-            $(this).parent().parent().find("p.results").html("Pinged at " + datestr + '<br />' + response['received'] + "/5 Packets Received <br /> Average RTT: " + response['average'] + ' ms');
-          } else {
-            $(this).parent().parent().find("p.results").html("Pinged at " + datestr + '<br /> 0/5 Packets Received <br /> Average RTT: N/A');
-          }
-          $(this).parent().parent().find("div.loadingframe").hide();
-          $(this).parent().parent().removeClass("bg-red bg-lime bg-yellow");
-          $(this).parent().parent().addClass(response['color']);
-          console.log($(this).parent().parent().find("div.loadingframe"))
-          console.log(datestr);
-        }
-    });
-    console.log("Ajax call finished");
-    return false; // for good measure
-});
+      if (response['received'] > 0) {
+        $(this).parent().parent().find("p.results").html("Pinged at " + datestr + '<br />' + response['received'] + "/5 Packets Received <br /> Average RTT: " + response['average'] + ' ms');
+      } else {
+        $(this).parent().parent().find("p.results").html("Pinged at " + datestr + '<br /> 0/5 Packets Received <br /> Average RTT: N/A');
+      }
+      $(this).parent().parent().find("div.loadingframe").hide();
+      $(this).parent().parent().removeClass("bg-red bg-lime bg-yellow");
+      $(this).parent().parent().addClass(response['color']);
+      console.log($(this).parent().parent().find("div.loadingframe"));
+      console.log(datestr);
+    }
+  });
+  console.log("Ajax call finished");
+  return false; // for good measure
+}
+
+// Ajax call to ping websites.
+$('.ajaxcall').on("click", AjaxPing);
 
 // Toggles add website section
 $('#adding').click( function(){
@@ -65,6 +67,9 @@ $("#addform").submit(function(e){
       } else {
         newpass.find("p.results").html("Pinged at " + datestr + '<br /> 0/5 Packets Received <br /> Average RTT: N/A');
       }
+      newpass.find(".ajaxcall").attr("href", "/wall/" + response['my_id'] + "/ping");
+      newpass.find(".ajaxcall").on("click", AjaxPing)
+      newpass.find(".historycall").attr("href", "/wall/" + response['my_id'] + "/history");
       newpass.insertAfter(lastpass);
       return false;
     }
