@@ -1,5 +1,4 @@
 db.sqlite3
-wallpinger/settings.py
 connector/__pycache__/
 connector/static/connector/bootstrap4.0.0.min.css
 connector/static/connector/bootstrap4.0.0.min.js
